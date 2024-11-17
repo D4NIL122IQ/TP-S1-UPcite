@@ -10,7 +10,7 @@
 *.sw?
 
 #assembleur
-.hex
+*.hex
 
 #c
 .settings
