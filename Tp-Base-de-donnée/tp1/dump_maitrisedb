@@ -1,0 +1,292 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.6.19
+-- Dumped by pg_dump version 14.13 (Ubuntu 14.13-0ubuntu0.22.04.1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'SQL_ASCII';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+DROP TABLE public.ue;
+DROP TABLE public.td;
+DROP TABLE public.etudiant_ue;
+DROP TABLE public.etudiant_td;
+DROP TABLE public.etudiant;
+SET default_tablespace = '';
+
+--
+-- Name: etudiant; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.etudiant (
+    etudiant_id integer NOT NULL,
+    nom character(15) NOT NULL,
+    prenom character(20) NOT NULL
+);
+
+
+--
+-- Name: etudiant_td; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.etudiant_td (
+    etudiant_id integer NOT NULL,
+    ue_id integer NOT NULL,
+    groupe integer NOT NULL
+);
+
+
+--
+-- Name: etudiant_ue; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.etudiant_ue (
+    etudiant_id integer NOT NULL,
+    ue_id integer NOT NULL
+);
+
+
+--
+-- Name: td; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.td (
+    ue_id integer NOT NULL,
+    groupe integer NOT NULL,
+    jour character(8),
+    horaire character(11),
+    salle character(10)
+);
+
+
+--
+-- Name: ue; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ue (
+    ue_id integer NOT NULL,
+    ue_nom character(20) NOT NULL
+);
+
+
+--
+-- Data for Name: etudiant; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.etudiant (etudiant_id, nom, prenom) FROM stdin;
+2	AUBIAN         	Christian           
+3	BACH           	Laure               
+4	BAZIN          	Fabienne            
+6	BOUCHER        	Audrey              
+7	BOURDEAU       	Pauline             
+8	BOURQUIN       	Philippe            
+9	BRETECHE       	Helen               
+10	BRUNEL         	Brigitte            
+11	BUIDUY         	Laurent             
+12	CAO            	Kheng               
+13	CELINI         	Sandrine            
+15	CHARDON        	Camille             
+16	COLLY          	Anne-Violaine       
+18	CUISSET        	Vincent             
+19	DE MONTFORT    	Aymeric             
+22	FERNANDEZ      	Phillippe           
+23	GAUTHIER       	Estelle             
+25	GUILLON        	Juiliette           
+26	GUILLONNEAU    	Sophie              
+27	HELSON         	Christophe          
+29	HUYNH          	Jdelenia Slyvia     
+30	IHADDADENE     	Karima              
+31	JONCHERY       	Claire              
+33	LAINE          	Mathilde            
+34	LANOY          	Emile               
+35	LARDIN         	Anne                
+36	MARTIGNON      	Gilles              
+37	MOREL          	Eric                
+38	MORIN          	Delphine            
+39	MOUNIER        	Paul                
+40	NGUYEN         	Sophie              
+43	POUGET         	Yann                
+44	PRIMAS         	Hugo                
+45	PRUVOST        	Fabien              
+47	RAVADARISOA    	Razafindramisa      
+48	SAGNA          	Carlos              
+49	SUZANNE        	Isabelle            
+50	TAJEDDINE      	Amal                
+51	THABUY         	Juliane             
+52	TRABELSI       	Emmanuel            
+54	Dupont         	Pierre              
+55	Durand         	Pierre              
+1	AFFRE          	Sébastien          
+5	BODEREAU       	Angélique          
+14	CHABERNAUD     	Hélène            
+17	CORDAILLAT     	Véronique          
+21	FAURE          	Hélène            
+24	GUILLAUM E     	Séverine           
+28	HEURTEL        	Hélène            
+46	RAPION         	Jérôme            
+53	VANDROMME      	Frédéric          
+20	DEMESSANT      	Gaël               
+32	KERFANT        	Noelle              
+41	PERON          	Marie-Cécile       
+42	PODHORNA       	Alina               
+\.
+
+
+--
+-- Data for Name: etudiant_td; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.etudiant_td (etudiant_id, ue_id, groupe) FROM stdin;
+1	1	5
+2	1	6
+3	1	5
+4	1	6
+5	1	5
+6	1	6
+7	1	5
+8	1	6
+9	1	5
+10	1	6
+11	1	5
+12	1	6
+13	1	5
+14	1	6
+15	1	5
+16	1	6
+17	1	5
+18	1	6
+19	1	5
+20	1	6
+21	1	5
+22	1	6
+23	1	5
+24	1	6
+25	1	5
+26	1	6
+27	1	5
+28	1	6
+29	1	5
+30	1	6
+31	1	5
+32	1	6
+33	1	5
+34	1	6
+35	1	5
+36	1	6
+37	1	5
+38	1	6
+39	1	5
+40	1	6
+41	1	5
+42	1	6
+43	1	5
+44	1	6
+45	1	5
+46	1	6
+47	1	5
+48	1	6
+49	1	5
+50	1	6
+51	1	5
+52	1	6
+53	1	5
+54	1	6
+55	1	5
+\.
+
+
+--
+-- Data for Name: etudiant_ue; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.etudiant_ue (etudiant_id, ue_id) FROM stdin;
+1	1
+2	1
+3	1
+4	1
+5	1
+6	1
+7	1
+8	1
+9	1
+10	1
+11	1
+12	1
+13	1
+14	1
+15	1
+16	1
+17	1
+18	1
+19	1
+20	1
+21	1
+22	1
+23	1
+24	1
+25	1
+26	1
+27	1
+28	1
+29	1
+30	1
+31	1
+32	1
+33	1
+34	1
+35	1
+36	1
+37	1
+38	1
+39	1
+40	1
+41	1
+42	1
+43	1
+44	1
+45	1
+46	1
+47	1
+48	1
+49	1
+50	1
+51	1
+52	1
+53	1
+54	1
+55	1
+\.
+
+
+--
+-- Data for Name: td; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.td (ue_id, groupe, jour, horaire, salle) FROM stdin;
+1	5	lundi   	08H00-10H30	523 A2    
+1	6	mardi   	08H00-10H30	522 D     
+\.
+
+
+--
+-- Data for Name: ue; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.ue (ue_id, ue_nom) FROM stdin;
+1	Informatique 3      
+\.
+
+
+--
+-- PostgreSQL database dump complete
+--
+
