@@ -1,0 +1,402 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.6.19
+-- Dumped by pg_dump version 14.13 (Ubuntu 14.13-0ubuntu0.22.04.1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+ALTER TABLE ONLY public.rencontre DROP CONSTRAINT rencontre_nomperdant_fkey;
+ALTER TABLE ONLY public.rencontre DROP CONSTRAINT rencontre_nomgagnant_fkey;
+ALTER TABLE ONLY public.gain DROP CONSTRAINT gain_nomsponsor_fkey;
+ALTER TABLE ONLY public.gain DROP CONSTRAINT gain_nomjoueur_fkey;
+ALTER TABLE ONLY public.sponsor DROP CONSTRAINT sponsor_pkey;
+ALTER TABLE ONLY public.rencontre DROP CONSTRAINT rencontre_pkey;
+ALTER TABLE ONLY public.joueur DROP CONSTRAINT joueur_pkey;
+ALTER TABLE ONLY public.gain DROP CONSTRAINT gain_pkey;
+DROP TABLE public.sponsor;
+DROP TABLE public.rencontre;
+DROP TABLE public.joueur;
+DROP TABLE public.gain;
+SET default_tablespace = '';
+
+--
+-- Name: gain; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.gain (
+    nomjoueur character(20) NOT NULL,
+    lieutournoi character(20) NOT NULL,
+    date integer NOT NULL,
+    prime integer,
+    nomsponsor character(15) NOT NULL
+);
+
+
+--
+-- Name: joueur; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.joueur (
+    nom character(20) NOT NULL,
+    prenom character(15) NOT NULL,
+    anneenaissance integer DEFAULT 1930 NOT NULL,
+    nationalite character(15) NOT NULL
+);
+
+
+--
+-- Name: rencontre; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.rencontre (
+    nomgagnant character(20) NOT NULL,
+    nomperdant character(20) NOT NULL,
+    lieutournoi character(20) NOT NULL,
+    date integer NOT NULL,
+    score character(20)
+);
+
+
+--
+-- Name: sponsor; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.sponsor (
+    nom character(15) NOT NULL,
+    adresse character varying(20) NOT NULL,
+    chiffreaffaires integer
+);
+
+
+--
+-- Data for Name: gain; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.gain (nomjoueur, lieutournoi, date, prime, nomsponsor) FROM stdin;
+Connors             	Roland Garros       	1983	66250	Kennex         
+Fromm               	Roland Garros       	1983	23760	Donnay         
+Luna                	Roland Garros       	1983	23760	Lacoste        
+Gottfried           	Roland Garros       	1983	23760	Addidas        
+Alexander           	Roland Garros       	1983	23760	Vittel         
+Gomez               	Roland Garros       	1983	23760	Dunlop         
+Arias               	Roland Garros       	1983	23760	Nike           
+Sundstrom           	Roland Garros       	1983	23760	Vittel         
+Teltscher           	Roland Garros       	1983	23760	Addidas        
+Lendl               	Roland Garros       	1983	66250	Nike           
+Vilas               	Roland Garros       	1983	66250	Lacoste        
+McEnroe             	Roland Garros       	1983	66250	Sergio Tacchini
+Higueras            	Roland Garros       	1983	125000	Sergio Tacchini
+Noah                	Roland Garros       	1983	1000000	Le Coq Sportif 
+Roger-Vasselin      	Roland Garros       	1983	125000	Lacoste        
+Wilander            	Roland Garros       	1983	500000	Peugeot        
+Lendl               	Roland Garros       	1989	23760	Donnay         
+Bruguera            	Roland Garros       	1989	23760	Lacoste        
+Duncan              	Roland Garros       	1989	23760	Addidas        
+Courier             	Roland Garros       	1989	23760	Vittel         
+Hlasek              	Roland Garros       	1989	23760	Dunlop         
+Ivanisevic          	Roland Garros       	1989	23760	Nike           
+Tulasne             	Roland Garros       	1989	23760	Vittel         
+Perez-Roldan        	Roland Garros       	1989	23760	Addidas        
+Agenor              	Roland Garros       	1989	66250	Nike           
+Wilander            	Roland Garros       	1989	66250	Lacoste        
+Mancini             	Roland Garros       	1989	66250	Sergio Tacchini
+Berger              	Roland Garros       	1989	66250	Kennex         
+Chesnokov           	Roland Garros       	1989	125000	Sergio Tacchini
+Edberg              	Roland Garros       	1989	125000	Lacoste        
+Becker              	Roland Garros       	1989	500000	Peugeot        
+Chang               	Roland Garros       	1989	1000000	Le Coq Sportif 
+Lendl               	Wimbledon           	1989	23760	Donnay         
+Goldie              	Wimbledon           	1989	23760	Lacoste        
+Becker              	Wimbledon           	1989	23760	Addidas        
+Chamberlin          	Wimbledon           	1989	23760	Vittel         
+McEnroe             	Wimbledon           	1989	23760	Dunlop         
+Wilander            	Wimbledon           	1989	23760	Nike           
+Mayotte             	Wimbledon           	1989	23760	Vittel         
+Edberg              	Wimbledon           	1989	23760	Addidas        
+Lungren             	Wimbledon           	1989	66250	Nike           
+Zivojinovic         	Wimbledon           	1989	66250	Lacoste        
+Krickstein          	Wimbledon           	1989	66250	Sergio Tacchini
+Shiras              	Wimbledon           	1989	66250	Kennex         
+Fitzgerald          	Wimbledon           	1989	125000	Sergio Tacchini
+Van Rensburg        	Wimbledon           	1989	125000	Lacoste        
+Chang               	Wimbledon           	1989	500000	Peugeot        
+Mansdorf            	Wimbledon           	1989	1000000	Le Coq Sportif 
+Krickstein          	Roland Garros       	1985	23760	Donnay         
+Gunthardt           	Roland Garros       	1985	23760	Lacoste        
+Cancellotti         	Roland Garros       	1985	23760	Addidas        
+Jarryd              	Roland Garros       	1985	23760	Vittel         
+Noah                	Roland Garros       	1985	23760	Dunlop         
+Smid                	Roland Garros       	1985	23760	Nike           
+Gildemeister        	Roland Garros       	1985	23760	Vittel         
+Nystrom             	Roland Garros       	1985	23760	Addidas        
+Sundstrom           	Roland Garros       	1985	66250	Nike           
+Lecomte             	Roland Garros       	1985	66250	Lacoste        
+Edberg              	Roland Garros       	1985	66250	Sergio Tacchini
+Jaite               	Roland Garros       	1985	66250	Kennex         
+Connors             	Roland Garros       	1985	125000	Sergio Tacchini
+McEnroe             	Roland Garros       	1985	125000	Lacoste        
+Lendl               	Roland Garros       	1985	500000	Peugeot        
+Wilander            	Roland Garros       	1985	1000000	Le Coq Sportif 
+Amritraj            	Wimbledon           	1985	23760	Donnay         
+Visser              	Wimbledon           	1985	23760	Lacoste        
+Seguso              	Wimbledon           	1985	23760	Addidas        
+Giammalva           	Wimbledon           	1985	23760	Vittel         
+Edberg              	Wimbledon           	1985	23760	Dunlop         
+Maurer              	Wimbledon           	1985	23760	Nike           
+Lendl               	Wimbledon           	1985	23760	Vittel         
+Mayotte             	Wimbledon           	1985	23760	Addidas        
+McEnroe             	Wimbledon           	1985	66250	Nike           
+Acuna               	Wimbledon           	1985	66250	Lacoste        
+Gunthardt           	Wimbledon           	1985	66250	Sergio Tacchini
+Lecomte             	Wimbledon           	1985	66250	Kennex         
+Jarryd              	Wimbledon           	1985	125000	Sergio Tacchini
+Connors             	Wimbledon           	1985	125000	Lacoste        
+Curren              	Wimbledon           	1985	500000	Peugeot        
+Becker              	Wimbledon           	1985	1000000	Le Coq Sportif 
+\.
+
+
+--
+-- Data for Name: joueur; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.joueur (nom, prenom, anneenaissance, nationalite) FROM stdin;
+Connors             	Jimmy          	1952	USA            
+Fromm               	Eric           	1958	USA            
+Roger-Vasselin      	Christophe     	1957	France         
+Luna                	Fernando       	1958	Espagne        
+Lendl               	Ivan           	1960	USA            
+Gottfried           	Brain          	1952	USA            
+Noah                	Yannick        	1960	France         
+Alexander           	John           	1951	Australie      
+Higueras            	Jose           	1953	Espagne        
+Gomez               	Andres         	1960	Equateur       
+Vilas               	Guillermo      	1952	Argentine      
+Arias               	Jimmy          	1964	USA            
+Wilander            	Mats           	1964	Suede          
+Sundstrom           	Henrik         	1964	Suede          
+McEnroe             	John           	1959	USA            
+Teltscher           	Eliot          	1959	USA            
+Goldie              	Dan            	1963	USA            
+Becker              	Boris          	1967	Allemagne      
+Chamberlin          	Paul           	1962	USA            
+Mayotte             	Tim            	1960	USA            
+Edberg              	Stefan         	1966	Suede          
+Lungren             	Peter          	1965	Suede          
+Zivojinovic         	Slobodan       	1963	Serbie         
+Krickstein          	Aaron          	1967	USA            
+Shiras              	Andres         	1959	USA            
+Fitzgerald          	John           	1960	Australie      
+Chang               	Michael        	1972	USA            
+Mansdorf            	Amos           	1965	Israel         
+Agenor              	Ronald         	1964	USA            
+Duncan              	Lawson         	1964	USA            
+Chesnokov           	Andrei         	1957	France         
+Mancini             	Alberto        	1969	Argentine      
+Berger              	Jay            	1966	USA            
+Bruguera            	Sergi          	1971	Espagne        
+Courier             	Jim            	1970	USA            
+Hlasek              	Jakob          	1964	Suisse         
+Ivanisevic          	Goran          	1964	Suede          
+Tulasne             	Thierry        	1963	France         
+Perez-Roldan        	Guillermo      	1969	Argentine      
+Van Rensburg        	Christo        	1962	Afrique du sud 
+Cancellotti         	Franceco       	1963	Italie         
+Jarryd              	Anders         	1961	Suede          
+Smid                	Tomas          	1956	Rep? tcheque   
+Gildemeister        	Hans           	1956	Chili          
+Nystrom             	Jakim          	1963	Suede          
+Lecomte             	Henri          	1963	France         
+Jaite               	Martin         	1964	Argentine      
+Amritraj            	Vijay          	1953	Inde           
+Visser              	Danie          	1961	Afrique du sud 
+Seguso              	Robert         	1963	USA            
+Giammalva           	Sammy          	1963	USA            
+Maurer              	Andreas        	1958	Allemagne      
+Acuna               	Ricardo        	1958	Chili          
+Curren              	Kevin          	1958	USA            
+Gunthardt           	Heinz          	1959	Suisse         
+\.
+
+
+--
+-- Data for Name: rencontre; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.rencontre (nomgagnant, nomperdant, lieutournoi, date, score) FROM stdin;
+Connors             	Fromm               	Roland Garros       	1983	6-2 6-1 6-1         
+Roger-Vasselin      	Luna                	Roland Garros       	1983	6-2 6-3 1-6 6-1     
+Lendl               	Gottfried           	Roland Garros       	1983	7-6 6-4 6-3         
+Noah                	Alexander           	Roland Garros       	1983	6-2 7-6 6-1         
+Higueras            	Gomez               	Roland Garros       	1983	7-6 6-4 7-6         
+Vilas               	Arias               	Roland Garros       	1983	7-5 6-3 6-2         
+Wilander            	Sundstrom           	Roland Garros       	1983	6-4 6-1 6-3         
+McEnroe             	Teltscher           	Roland Garros       	1983	6-3 3-6 6-4         
+Roger-Vasselin      	Connors             	Roland Garros       	1983	6-4 6-4 7-6         
+Noah                	Lendl               	Roland Garros       	1983	7-6 6-2 5-7 6-0     
+Higueras            	Vilas               	Roland Garros       	1983	6-2 6-7 6-1 4-6 6-1 
+Wilander            	McEnroe             	Roland Garros       	1983	4-6 6-2 6-4 6-0     
+Noah                	Roger-Vasselin      	Roland Garros       	1983	6-3 6-0 6-0         
+Wilander            	Higueras            	Roland Garros       	1983	7-5 6-7 6-3 6-0     
+Noah                	Wilander            	Roland Garros       	1983	6-2 7-5 7-6         
+Lendl               	Lungren             	Wimbledon           	1989	1-6 7-6 6-0         
+Goldie              	Zivojinovic         	Wimbledon           	1989	6-4 6-4 7-6         
+Becker              	Krickstein          	Wimbledon           	1989	6-4 6-4 7-5         
+Chamberlin          	Shiras              	Wimbledon           	1989	7-5 6-4 7-6         
+McEnroe             	Fitzgerald          	Wimbledon           	1989	6-3 0-6 6-4 6-4     
+Wilander            	Van Rensburg        	Wimbledon           	1989	3-6 7-5 7-5 6-3     
+Mayotte             	Chang               	Wimbledon           	1989	6-3 6-1 6-3         
+Edberg              	Mansdorf            	Wimbledon           	1989	6-4 6-3 6-2         
+Lendl               	Goldie              	Wimbledon           	1989	7-6 7-6 6-0         
+Becker              	Chamberlin          	Wimbledon           	1989	6-1 6-2 6-0         
+McEnroe             	Wilander            	Wimbledon           	1989	7-6 3-6 6-3 6-4     
+Edberg              	Mayotte             	Wimbledon           	1989	7-6 7-6 6-3         
+Becker              	Lendl               	Wimbledon           	1989	7-5 6-7 2-6 6-4 6-3 
+Edberg              	McEnroe             	Wimbledon           	1989	7-5 7-6 7-6         
+Becker              	Edberg              	Wimbledon           	1989	6-0 7-6 6-4         
+Chang               	Lendl               	Roland Garros       	1989	4-6 4-6 6-3 6-3 6-3 
+Agenor              	Bruguera            	Roland Garros       	1989	2-6 3-6 6-3 6-1 6-2 
+Wilander            	Duncan              	Roland Garros       	1989	7-5 6-3 6-2         
+Chesnokov           	Courier             	Roland Garros       	1989	2-6 3-6 7-6 6-2 7-5 
+Mancini             	Hlasek              	Roland Garros       	1989	6-4 6-4 4-6 2-6 6-4 
+Edberg              	Ivanisevic          	Roland Garros       	1989	7-5 6-3 6-3         
+Berger              	Tulasne             	Roland Garros       	1989	3-6 6-2 6-0 6-3     
+Becker              	Perez-Roldan        	Roland Garros       	1989	3-6 6-4 6-2 4-6 7-5 
+Chang               	Agenor              	Roland Garros       	1989	6-4 2-6 6-4 7-6     
+Chesnokov           	Wilander            	Roland Garros       	1989	6-4 6-0 7-5         
+Edberg              	Mancini             	Roland Garros       	1989	6-1 6-3 7-6         
+Becker              	Berger              	Roland Garros       	1989	6-3 6-4 6-1         
+Chang               	Chesnokov           	Roland Garros       	1989	6-4 2-6 6-4 7-6     
+Becker              	Edberg              	Roland Garros       	1989	6-3 5-7 3-6 6-2     
+Chang               	Becker              	Roland Garros       	1989	6-1 3-6 4-6 6-4 6-2 
+Lendl               	Krickstein          	Roland Garros       	1985	6-2 6-2 6-0         
+Jaite               	Gunthardt           	Roland Garros       	1985	6-1 6-1 6-3         
+Connors             	Cancellotti         	Roland Garros       	1985	3-6 6-0 6-4 6-2     
+Edberg              	Jarryd              	Roland Garros       	1985	6-3 6-7 6-4 6-2     
+Lecomte             	Noah                	Roland Garros       	1985	6-3 6-4 6-7 4-6 6-1 
+Wilander            	Smid                	Roland Garros       	1985	6-3 6-4 6-4         
+Nystrom             	Gildemeister        	Roland Garros       	1985	7-6 6-1 6-1         
+McEnroe             	Sundstrom           	Roland Garros       	1985	6-3 7-5 6-2         
+Lendl               	Jaite               	Roland Garros       	1985	6-4 6-2 6-4         
+Connors             	Edberg              	Roland Garros       	1985	6-4 6-1 6-1         
+Wilander            	Lecomte             	Roland Garros       	1985	6-4 7-6 6-7 7-5     
+McEnroe             	Nystrom             	Roland Garros       	1985	6-7 6-2 6-2 3-6 7-5 
+Lendl               	Connors             	Roland Garros       	1985	7-5 6-7 2-6 6-4 6-3 
+Wilander            	McEnroe             	Roland Garros       	1985	7-5 7-6 7-6         
+Wilander            	Lendl               	Roland Garros       	1985	6-0 7-6 6-4         
+Lecomte             	Lendl               	Wimbledon           	1985	3-6 6-4 6-3 6-1     
+Becker              	Mayotte             	Wimbledon           	1985	6-3 4-6 6-7 7-6 6-2 
+Gunthardt           	Amritraj            	Wimbledon           	1985	6-4 6-4 6-1         
+Jarryd              	Visser              	Wimbledon           	1985	6-1 6-4 6-1         
+Acuna               	Seguso              	Wimbledon           	1985	6-4 7-6 6-2         
+Connors             	Giammalva           	Wimbledon           	1985	6-3 6-4 6-3         
+Curren              	Edberg              	Wimbledon           	1985	7-6 6-3 7-6         
+McEnroe             	Maurer              	Wimbledon           	1985	6-0 6-4 6-2         
+Becker              	Lecomte             	Wimbledon           	1985	7-6 3-6 6-3 6-4     
+Connors             	Acuna               	Wimbledon           	1985	6-1 7-6 6-2         
+Curren              	McEnroe             	Wimbledon           	1985	6-2 6-2 6-4         
+Becker              	Jarryd              	Wimbledon           	1985	2-6 7-6 6-3 6-3     
+Curren              	Connors             	Wimbledon           	1985	6-2 6-2 6-1         
+Becker              	Curren              	Wimbledon           	1985	6-3 6-7 7-6 6-4     
+Jarryd              	Gunthardt           	Wimbledon           	1985	6-4 6-3 6-2         
+\.
+
+
+--
+-- Data for Name: sponsor; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.sponsor (nom, adresse, chiffreaffaires) FROM stdin;
+Kennex         	USA	390000000
+Peugeot        	France	100000000
+Addidas        	France	300000000
+Lacoste        	France	10000000
+Reebok         	USA	200000000
+Donnay         	USA	2000000
+Dunlop         	France	1500000000
+Vittel         	France	300000000
+Nike           	USA	500000000
+Le Coq Sportif 	France	300000000
+Sergio Tacchini	Italie	290000000
+\.
+
+
+--
+-- Name: gain gain_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.gain
+    ADD CONSTRAINT gain_pkey PRIMARY KEY (nomjoueur, lieutournoi, date);
+
+
+--
+-- Name: joueur joueur_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.joueur
+    ADD CONSTRAINT joueur_pkey PRIMARY KEY (nom);
+
+
+--
+-- Name: rencontre rencontre_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rencontre
+    ADD CONSTRAINT rencontre_pkey PRIMARY KEY (nomgagnant, nomperdant, lieutournoi, date);
+
+
+--
+-- Name: sponsor sponsor_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.sponsor
+    ADD CONSTRAINT sponsor_pkey PRIMARY KEY (nom);
+
+
+--
+-- Name: gain gain_nomjoueur_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.gain
+    ADD CONSTRAINT gain_nomjoueur_fkey FOREIGN KEY (nomjoueur) REFERENCES public.joueur(nom);
+
+
+--
+-- Name: gain gain_nomsponsor_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.gain
+    ADD CONSTRAINT gain_nomsponsor_fkey FOREIGN KEY (nomsponsor) REFERENCES public.sponsor(nom);
+
+
+--
+-- Name: rencontre rencontre_nomgagnant_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rencontre
+    ADD CONSTRAINT rencontre_nomgagnant_fkey FOREIGN KEY (nomgagnant, lieutournoi, date) REFERENCES public.gain(nomjoueur, lieutournoi, date);
+
+
+--
+-- Name: rencontre rencontre_nomperdant_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.rencontre
+    ADD CONSTRAINT rencontre_nomperdant_fkey FOREIGN KEY (nomperdant, lieutournoi, date) REFERENCES public.gain(nomjoueur, lieutournoi, date);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
