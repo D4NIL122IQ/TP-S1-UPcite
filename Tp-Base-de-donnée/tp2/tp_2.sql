@@ -83,7 +83,7 @@ WHERE j.nom = g.nomJoueur
 
 -- j --
 
-SELECT J.nom , J.nationalite
+SELECT DISTINCT J.nom , J.nationalite
 FROM joueur J , gain G , rencontre R
 WHERE J.nom = G.nomJoueur 
     AND G.nomSponsor = 'Peugeot'
@@ -106,34 +106,60 @@ WHERE J.nom = G.nomJoueur
 
 
 ----- 2. JUSTE AVEC DES IN ----
-SELECT J.nom , J.nationalite 
+SELECT J.nom, J.nationalite
 FROM joueur J , gain G
 WHERE J.nom = G.nomJoueur 
         AND G.date = 1985
         AND G.lieuTournoi = 'Roland Garros'
-        AND J.nom IN (SELECT J.nom 
-                      FROM joueur J , gain G
-                      WHERE J.nom = G.nomJoueur 
-                      AND G.date = 1985
-                      AND G.lieuTournoi = 'Wimbledon ');
+        AND J.nom IN (SELECT J2.nom 
+                      FROM joueur J2 , gain G2
+                      WHERE J2.nom = G2.nomJoueur 
+                      AND G2.date = 1985
+                      AND G2.lieuTournoi = 'Wimbledon ');
+
+----- 3. JUSTE AVEC DES EXISTS -----  
+
+SELECT nom , nationalite
+FROM joueur 
+WHERE EXISTS (SELECT *
+                FROM gain 
+                WHERE  nom = nomJoueur 
+                    AND date = 1985
+                    AND lieuTournoi = 'Roland Garros')
+        AND  EXISTS (SELECT *
+                      FROM gain
+                      WHERE  nom = nomJoueur 
+                            AND date = 1985
+                            AND lieuTournoi = 'Wimbledon');
+
+---- DEFI : sans sous-requete sans IN sans EXISTS sans INTERSECT ---
+
+SELECT nom, nationalite
+FROM joueur ,gain G1 , gain G2
+WHERE nom = G1.nomJoueur
+        AND G1.lieuTournoi = 'Roland Garros'
+        AND G1.date = 1985
+        AND nom = G2.nomJoueur
+        AND G2.lieuTournoi = 'Wimbledon'
+        AND G2.date = 1985;
+
+---- DEFI : avec sous-requete sans IN sans EXISTS sans INTERSECT ---
+SELECT nom , nationalite 
+FROM joueur 
+WHERE nom = ANY (SELECT J2.nom 
+                      FROM joueur J2 , gain G2
+                      WHERE J2.nom = G2.nomJoueur 
+                      AND G2.date = 1985
+                      AND G2.lieuTournoi = 'Roland Garros')
+
+        AND nom = ANY(SELECT J2.nom 
+                      FROM joueur J2 , gain G2
+                      WHERE J2.nom = G2.nomJoueur 
+                      AND G2.date = 1985
+                      AND G2.lieuTournoi = 'Wimbledon ');
 
 
------ 3. JUSTE AVEC DES EXISTS -----  error
-
-SELECT J.nom , J.nationalite 
-FROM joueur J , gain G
-WHERE J.nom = G.nomJoueur 
-        AND G.date = 1985
-        AND G.lieuTournoi = 'Roland Garros'
-        AND  EXISTS (SELECT j.nom 
-                      FROM joueur j , gain G
-                      WHERE j.nom = J.nom
-                      AND j.nom = G.nomJoueur 
-                      AND G.date = 1985
-                      AND G.lieuTournoi = 'Wimbledon ');
-
-
--- i -- 
+-- l -- 
 ----- 1. JUSTE AVEC EXCEPT ----
 
 SELECT nomJoueur
@@ -153,6 +179,14 @@ WHERE lieuTournoi = 'Roland Garros'
                                 FROM gain
                                 WHERE prime < 1000000
                                 AND lieuTournoi = 'Roland Garros');
+        -- II -- 
+SELECT nomJoueur
+FROM gain
+WHERE lieuTournoi = 'Roland Garros'
+GROUP BY nomJoueur
+HAVING min(prime) >= 1000000;
+
+
 
 -- m --
 ----- 1.AVEC INTERSECT ET EXCEPT ----
@@ -179,47 +213,67 @@ WHERE lieuTournoi = 'Roland Garros'
         AND nomGagnant NOT IN (SELECT DISTINCT nomPerdant 
                                 FROM rencontre
                                 WHERE lieuTournoi = 'Roland Garros')
-        AND EXISTS (SELECT DISTINCT nomPerdant FROM rencontre
-                                WHERE lieuTournoi = 'Wimbledon'
-                                        AND nomPerdant NOT IN (SELECT DISTINCT nomGagnant FROM rencontre
-                                                                WHERE lieuTournoi = 'Wimbledon'));
+        AND EXISTS (SELECT DISTINCT nomPerdant 
+                    FROM rencontre
+                    WHERE lieuTournoi = 'Wimbledon'
+                            AND nomPerdant NOT IN (SELECT DISTINCT nomGagnant 
+                                                    FROM rencontre
+                                                    WHERE lieuTournoi = 'Wimbledon'));
+
+
 
 -- n --
+----- 1.AVEC EXISTS ---- probleme
+SELECT j1.nom , j1.prenom , j2.nom , j2.prenom
+FROM joueur j1, joueur j2
+WHERE EXISTS (SELECT *
+                FROM rencontre R
+                WHERE j1.nom = R.nomGagnant
+                        AND j2.nom = R.nomPerdant)
+        AND NOT EXISTS (SELECT * 
+                        FROM rencontre R
+                        WHERE j2.nom = R.nomGagnant
+                                AND j1.nom = R.nomGagnant);
 
------ 1.AVEC EXCEPT ----
--- probleme
-SELECT R.nomGagnant , R.nomPerdant
-FROM rencontre R, joueur J1, joueur J2
-WHERE R.nomGagnant = J1.nom AND R.nomGagnant = J1.prenom
-        AND R.nomPerdant = J2.nom AND R.nomGagnant = J2.prenom
-        AND NOT EXISTS (SELECT *
-                    FROM rencontre r1
-                    WHERE R.nomGagnant = r1.nomPerdant)
-        AND NOT EXISTS ( SELECT *
-                        FROM rencontre r2
-                        WHERE R.nomPerdant = r2.nomGagnant);
+
+----- 2. AVEC EXCEPT ---
+SELECT j1.nom , j1.prenom , j2.nom , j2.prenom
+FROM joueur j1, joueur j2, rencontre R
+WHERE j1.nom = R.nomGagnant
+        AND j2.nom = R.nomPerdant
+EXCEPT
+    SELECT j1.nom , j1.prenom , j2.nom , j2.prenom
+    FROM joueur j1, joueur j2, rencontre R
+    WHERE j2.nom = R.nomGagnant
+            AND j1.nom = R.nomPerdant;
 
 -- o --
-SELECT 
+SELECT nomJoueur
+FROM gain
+WHERE lieuTournoi = 'Roland Garros'
+GROUP BY nomJoueur
+HAVING count(nomJoueur) = (SELECT count(DISTINCT date)
+                            FROM gain 
+                            WHERE lieuTournoi = 'Roland Garros') ;
 
 -- p --
-SELECT count(*)
+SELECT count(*) AS nbr_Joueur_Wimbledon_1989
 FROM gain
 WHERE lieuTournoi = 'Wimbledon'
         AND date = 1989;
 
 -- q --
-SELECT gain.date , avg(gain.prime)
+SELECT gain.date , avg(gain.prime) AS moyenne
 FROM gain
 GROUP BY gain.date;
 
--- r --
-SELECT count() AS numero, J.nom , J.prenom
+-- r -- probleme numero ???
+SELECT  AS numero , J.nom , J.prenom
 FROM joueur J;
 
 -- s --
 INSERT INTO joueur (nom, prenom, nationalite)
-VALUES ('Guidjou' , 'Danil' , 'Algerie');
+VALUES ('Guidjou' , 'Danil' , 'Algerienne');
 
 -- t -- 
 UPDATE joueur 
@@ -251,4 +305,4 @@ WHERE 200000 > ALL (SELECT sum(prime)
                     WHERE G.nomJoueur = nomJoueur)
 GROUP BY nomJoueur , prime;
 
--- 
+-- --
