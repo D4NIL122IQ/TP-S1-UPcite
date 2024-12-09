@@ -223,7 +223,7 @@ WHERE lieuTournoi = 'Roland Garros'
 
 
 -- n --
------ 1.AVEC EXISTS ---- probleme
+----- 1.AVEC EXISTS ---- 
 SELECT j1.nom , j1.prenom , j2.nom , j2.prenom
 FROM joueur j1, joueur j2
 WHERE EXISTS (SELECT *
@@ -233,7 +233,7 @@ WHERE EXISTS (SELECT *
         AND NOT EXISTS (SELECT * 
                         FROM rencontre R
                         WHERE j2.nom = R.nomGagnant
-                                AND j1.nom = R.nomGagnant);
+                                AND j1.nom = R.nomPerdant);
 
 
 ----- 2. AVEC EXCEPT ---
@@ -268,7 +268,7 @@ FROM gain
 GROUP BY gain.date;
 
 -- r -- probleme numero ???
-SELECT  AS numero , J.nom , J.prenom
+SELECT  count(*) AS numero , J.nom , J.prenom
 FROM joueur J;
 
 -- s --
@@ -298,11 +298,13 @@ DELETE FROM joueur
 WHERE nom = 'Noah';
 
 -- X --  : erreur
-SELECT G.nomJoueur , G.prime
+SELECT G.nomJoueur , sum(prime)
 FROM gain G
-WHERE 200000 > ALL (SELECT sum(prime) 
-                    FROM gain
-                    WHERE G.nomJoueur = nomJoueur)
-GROUP BY nomJoueur , prime;
+GROUP BY nomJoueur 
+HAVING sum(G.prime)>200000;
+
+DELETE FROM gain 
+WHERE sum(prime) <200000
+GROUP BY nomJoueur
 
 -- --
