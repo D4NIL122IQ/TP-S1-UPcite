@@ -224,7 +224,7 @@ WHERE lieuTournoi = 'Roland Garros'
 
 -- n --
 ----- 1.AVEC EXISTS ---- 
-SELECT j1.nom , j1.prenom , j2.nom , j2.prenom
+SELECT DISTINCT j1.nom , j1.prenom , j2.nom , j2.prenom
 FROM joueur j1, joueur j2
 WHERE EXISTS (SELECT *
                 FROM rencontre R
@@ -247,6 +247,19 @@ EXCEPT
     WHERE j2.nom = R.nomGagnant
             AND j1.nom = R.nomPerdant;
 
+
+------ 3. AVEC IN -------
+SELECT DISTINCT j1.nom , j1.prenom , j2.nom , j2.prenom
+FROM joueur j1, joueur j2
+WHERE (j1.nom , j2.nom) IN (SELECT nomGagnant , nomPerdant
+                                FROM rencontre
+                                where j1.nom = nomGagnant 
+                                        AND j2.nom = nomPerdant)
+        AND (j2.nom , j1.nom) NOT IN (SELECT nomGagnant , nomPerdant
+                                FROM rencontre
+                                where j2.nom = nomGagnant 
+                                        AND j1.nom = nomPerdant);
+
 -- o --
 SELECT nomJoueur
 FROM gain
@@ -255,6 +268,22 @@ GROUP BY nomJoueur
 HAVING count(nomJoueur) = (SELECT count(DISTINCT date)
                             FROM gain 
                             WHERE lieuTournoi = 'Roland Garros') ;
+
+
+----- EXCEPT -----
+SELECT distinct nomJoueur
+FROM gain g1
+WHERE lieuTournoi = 'Roland Garros'
+        AND NOT EXISTS ((SELECT  date
+                from gain
+                WHERE lieuTournoi = 'Roland Garros'
+                )
+                EXCEPT 
+                (select date
+                from gain g2
+                WHERE lieuTournoi = 'Roland Garros'
+                        AND g1.nomJoueur = g2.nomJoueur
+                ) );
 
 -- p --
 SELECT count(*) AS nbr_Joueur_Wimbledon_1989
@@ -267,9 +296,24 @@ SELECT gain.date , avg(gain.prime) AS moyenne
 FROM gain
 GROUP BY gain.date;
 
--- r -- probleme numero ???
-SELECT  count(*) AS numero , J.nom , J.prenom
-FROM joueur J;
+--- nbr de date par tournoi ---
+
+SELECT  lieuTournoi ,count(DISTINCT date)
+FROM gain
+GROUP BY lieuTournoi;
+
+----- nbr de date par tournoi qui possede plus de 2 date ----
+SELECT  lieuTournoi ,count(DISTINCT date)
+FROM gain
+GROUP BY lieuTournoi
+HAVING count(DISTINCT date) > 2;
+
+-- r --
+SELECT count( x.nom) , x.nom , x.prenom
+FROM joueur x, joueur y
+WHERE x.nom >= y.nom
+GROUP BY x.nom, x.prenom 
+ORDER BY 1;
 
 -- s --
 INSERT INTO joueur (nom, prenom, nationalite)
@@ -288,23 +332,31 @@ WHERE nom = 'Guidjou';
 DELETE FROM joueur
 WHERE nom = 'Noah';  --erreur car le tuple ou nom = 'Noah' est une cle etrangere pour un tuple dans la table gain
 
--- w -- ; erreur
-UPDATE rencontre
-SET 
-DELETE FROM gain 
-WHERE nomJoueur = 'Noah';
+-- w -- 
+--modif
+ALTER TABLE gain DROP constraint gain_nomjoueur_fkey;
+ALTER TABLE rencontre DROP constraint rencontre_nomgagnant_fkey;
+ALTER TABLE rencontre DROP constraint rencontre_nomperdant_fkey;
 
+ALTER TABLE gain ADD FOREIGN KEY (nomJoueur) references joueur (nom) ON DELETE CASCADE;
+ALTER TABLE rencontre ADD FOREIGN KEY (nomGagnant, lieuTournoi, date) references gain (nomJoueur, lieuTournoi, date) ON DELETE CASCADE;
+ALTER TABLE rencontre ADD FOREIGN KEY (nomPerdant, lieuTournoi, date) references gain (nomJoueur, lieuTournoi, date) ON DELETE CASCADE;
+
+-- supp
 DELETE FROM joueur
 WHERE nom = 'Noah';
 
--- X --  : erreur
+-- X -- 
 SELECT G.nomJoueur , sum(prime)
 FROM gain G
 GROUP BY nomJoueur 
 HAVING sum(G.prime)>200000;
 
 DELETE FROM gain 
-WHERE sum(prime) <200000
-GROUP BY nomJoueur
+WHERE nomJoueur NOT IN (SELECT G.nomJoueur
+                        FROM gain G
+                        GROUP BY nomJoueur 
+                        HAVING sum(G.prime)>200000;)
 
 -- --
+
