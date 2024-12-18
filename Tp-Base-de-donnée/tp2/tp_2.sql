@@ -347,11 +347,6 @@ DELETE FROM joueur
 WHERE nom = 'Noah';
 
 -- X -- 
-SELECT G.nomJoueur , sum(prime)
-FROM gain G
-GROUP BY nomJoueur 
-HAVING sum(G.prime)>200000;
-
 DELETE FROM gain 
 WHERE nomJoueur NOT IN (SELECT G.nomJoueur
                         FROM gain G
