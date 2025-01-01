@@ -74,6 +74,10 @@ SELECT nomJoueur , prime
 FROM gain 
 WHERE nomSponsor = 'Peugeot' AND date >= 1985 AND date <= 1990;
         -- alternative date between 1985 and 1990 -- 
+SELECT nomJoueur,prime
+FROM gain
+WHERE nomSponsor = 'Peugeot'
+        AND date BETWEEN 1985 AND 1990;
 -- i --
 SELECT nom, anneeNaissance
 FROM joueur j , gain g
